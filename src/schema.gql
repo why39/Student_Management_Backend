@@ -1,0 +1,95 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AddGroupMemberInput {
+  groupId: String!
+  role: String!
+  userId: String!
+}
+
+type AuthResponse {
+  accessToken: String!
+  user: UserType!
+}
+
+input CreateGroupInput {
+  description: String
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GroupMemberType {
+  group: GroupType!
+  groupId: String!
+  id: ID!
+  joinedAt: DateTime!
+  role: String!
+  user: UserType
+  userId: String!
+}
+
+type GroupType {
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  members: [GroupMemberType!]
+  name: String!
+  owner: UserType!
+  ownerId: String!
+  updatedAt: DateTime!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  addGroupMember(addGroupMemberInput: AddGroupMemberInput!): GroupMemberType!
+  createGroup(createGroupInput: CreateGroupInput!): GroupType!
+  login(loginInput: LoginInput!): AuthResponse!
+  register(registerInput: RegisterInput!): AuthResponse!
+  removeGroup(id: ID!): GroupType!
+  removeGroupMember(groupId: ID!, userId: ID!): Boolean!
+  updateGroup(id: ID!, updateGroupInput: UpdateGroupInput!): GroupType!
+}
+
+type Query {
+  group(id: ID!): GroupType!
+  groups: [GroupType!]!
+  me: UserType!
+  myGroups: [GroupType!]!
+  myStudentGroups: [GroupType!]!
+  studentUsers: [UserType!]!
+  teacherUsers: [UserType!]!
+  user(id: ID!): UserType!
+  users: [UserType!]!
+}
+
+input RegisterInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+  role: String!
+}
+
+input UpdateGroupInput {
+  description: String
+  name: String
+}
+
+type UserType {
+  createdAt: DateTime!
+  email: String!
+  firstName: String!
+  id: ID!
+  lastName: String!
+  role: String!
+  updatedAt: DateTime!
+}
