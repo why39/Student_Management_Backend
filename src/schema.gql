@@ -2,6 +2,36 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""The states an activity can be in"""
+enum ActivityState {
+  """Activity has been canceled"""
+  CANCELED
+
+  """Activity has been completed"""
+  COMPLETED
+
+  """Activity is currently in progress"""
+  IN_PROGRESS
+
+  """Activity has been created but not started"""
+  NEW
+}
+
+type ActivityType {
+  attendees: [UserType!]
+  createdAt: DateTime!
+  createdBy: UserType!
+  createdById: String!
+  description: String!
+  group: GroupType!
+  groupId: String!
+  id: ID!
+  location: String
+  scheduledAt: DateTime!
+  state: ActivityState!
+  title: String!
+}
+
 input AddGroupMemberInput {
   groupId: String!
   role: String!
@@ -11,6 +41,15 @@ input AddGroupMemberInput {
 type AuthResponse {
   accessToken: String!
   user: UserType!
+}
+
+input CreateActivityInput {
+  description: String!
+  groupId: ID!
+  location: String
+  scheduledAt: DateTime!
+  state: ActivityState! = NEW
+  title: String!
 }
 
 input CreateGroupInput {
@@ -44,6 +83,10 @@ type GroupType {
   updatedAt: DateTime!
 }
 
+input JoinActivityInput {
+  activityId: ID!
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -51,19 +94,27 @@ input LoginInput {
 
 type Mutation {
   addGroupMember(addGroupMemberInput: AddGroupMemberInput!): GroupMemberType!
+  createActivity(createActivityInput: CreateActivityInput!): ActivityType!
   createGroup(createGroupInput: CreateGroupInput!): GroupType!
+  joinActivity(joinActivityInput: JoinActivityInput!): ActivityType!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
   removeGroup(id: ID!): GroupType!
   removeGroupMember(groupId: ID!, userId: ID!): Boolean!
+  updateActivityState(updateActivityStateInput: UpdateActivityStateInput!): ActivityType!
   updateGroup(id: ID!, updateGroupInput: UpdateGroupInput!): GroupType!
 }
 
 type Query {
+  activitiesByGroup(groupId: ID!): [ActivityType!]!
+  activity(id: ID!): ActivityType!
   group(id: ID!): GroupType!
   groups: [GroupType!]!
   me: UserType!
+  myActivitiesAsStudent: [ActivityType!]!
+  myActivitiesAsTeacher: [ActivityType!]!
   myGroups: [GroupType!]!
+  myJoinedActivities: [ActivityType!]!
   myStudentGroups: [GroupType!]!
   studentUsers: [UserType!]!
   teacherUsers: [UserType!]!
@@ -77,6 +128,11 @@ input RegisterInput {
   lastName: String!
   password: String!
   role: String!
+}
+
+input UpdateActivityStateInput {
+  activityId: ID!
+  state: ActivityState!
 }
 
 input UpdateGroupInput {

@@ -26,6 +26,14 @@ enum GroupMemberRole {
   COMMON_MEMBER
 }
 
+// Activity state enum
+enum ActivityState {
+  NEW
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
 // User model
 model User {
   id        String   @id @default(uuid())
@@ -38,9 +46,11 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  ownedGroups      Group[]          @relation("GroupOwner")
-  groupMemberships GroupMember[]
-  notifications    Notification[]
+  ownedGroups       Group[]          @relation("GroupOwner")
+  groupMemberships  GroupMember[]
+  notifications     Notification[]
+  createdActivities Activity[]       @relation("ActivityCreator")
+  attendedActivities Activity[]      @relation("ActivityAttendees")
 }
 
 // Group model
@@ -52,9 +62,10 @@ model Group {
   updatedAt   DateTime @updatedAt
 
   // Relationships
-  ownerId  String
-  owner    User          @relation("GroupOwner", fields: [ownerId], references: [id])
-  members  GroupMember[]
+  ownerId    String
+  owner      User          @relation("GroupOwner", fields: [ownerId], references: [id])
+  members    GroupMember[]
+  activities Activity[]    // Add this relation field
 }
 
 // GroupMember model (join table with additional attributes)
@@ -82,5 +93,23 @@ model Notification {
   // Relationships
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+}
+
+// Activity model
+model Activity {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  scheduledAt DateTime
+  location    String?
+  createdAt   DateTime      @default(now())
+  state       ActivityState @default(NEW)
+
+  // Relationships
+  createdById String
+  createdBy   User          @relation("ActivityCreator", fields: [createdById], references: [id])
+  groupId     String
+  group       Group         @relation(fields: [groupId], references: [id])
+  attendees   User[]        @relation("ActivityAttendees")
 }
 

@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { GroupsModule } from './groups/groups.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
   imports: [
@@ -17,7 +18,6 @@ import { ConfigModule } from '@nestjs/config';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      // Removed invalid 'cors' configuration
       subscriptions: {
         'graphql-ws': true,
         'subscriptions-transport-ws': true,
@@ -26,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     GroupsModule,
     AuthModule,
+    ActivityModule,
   ],
   providers: [PrismaService],
 })
